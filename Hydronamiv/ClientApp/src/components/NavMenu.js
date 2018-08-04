@@ -29,6 +29,16 @@ export default props => (
             <Glyphicon glyph='th-list' /> Fetch data
           </NavItem>
         </LinkContainer>
+        <LinkContainer to={'/block1'}>
+          <NavItem>
+            <Glyphicon glyph='th-list' /> Исходные данные
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/block2'}>
+          <NavItem>
+            <Glyphicon glyph='th-list' /> Производительность земснаряда
+          </NavItem>
+        </LinkContainer>
       </Nav>
     </Navbar.Collapse>
   </Navbar>
