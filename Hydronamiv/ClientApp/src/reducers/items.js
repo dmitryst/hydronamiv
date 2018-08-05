@@ -19,28 +19,36 @@ export const reducer = (state = [], action)  => {
         el.val = parseFloat(newValue);
 
         // find all ids that should be re-calculate
-        const toRecalculate = getAllDependentDataId(changedId);
+        //const toRecalculate = getAllDependentDataId(changedId);
         //console.log(toRecalculate);
 
         // recalculation
-        toRecalculate.forEach(r => {
-            let obj = newState.find(d => d.id === r);
-            let operandsObj = {};
+        let sortedItems = items.sort(dynamicSort("calcOrder"));
+        sortedItems.forEach(i => {
+            if (i.calcOrder === 12) {
+                let t;
+            }
+            let obj = newState.find(x => x.id === i.id);
 
-            Object.keys(obj.operands).forEach(e => {
-                //console.log(`key=${e}  value=${obj.operands[e]}`);
-                let o = newState.find(d => d.id === obj.operands[e]);
+            // if obj has operands prop and operands prop has some values
+            if (('operands' in obj) && (Object.keys(obj.operands).length !== 0)) {
+                let operandsObj = {};
 
-                operandsObj[`${e}`] = o.val;
-            });
-            //console.log(operandsObj);
+                Object.keys(obj.operands).forEach(e => {
+                    //console.log(`key=${e}  value=${obj.operands[e]}`);
+                    let o = newState.find(x => x.id === obj.operands[e]);
 
-            let expr = Parser.parse(obj.formula);
-            let result = expr.evaluate(operandsObj);
-            //console.log(result);
+                    operandsObj[`${e}`] = o.val;
+                });
+                //console.log(operandsObj);
 
-            let el = newState.find(d => d.id === r);
-            el.val = Math.round((result + 0.00001) * 100) / 100;
+                let expr = Parser.parse(obj.formula);
+                let result = expr.evaluate(operandsObj);
+                //console.log(result);
+
+                let el = newState.find(x => x.id === i.id);
+                el.val = Math.round((result + 0.00001) * 100) / 100;
+            }           
         });
 
         //console.log(newState);
@@ -49,19 +57,42 @@ export const reducer = (state = [], action)  => {
     return state;
 }
 
-function getAllDependentDataId(changedId) {
-    let toRecalculate = [];
-    items.forEach(d => {
-        if (!isEmpty(d.operands)) {
-            let values = Object.values(d.operands);
-            if (values.includes(changedId)) {
-                toRecalculate.push(d.id);
-            }
-        }
-    });
-    return toRecalculate;
-}
+//function getAllDependentDataId(changedId) {
+//    let toRecalculate = [];
+//    items.forEach(d => {
+//        if (!isEmpty(d.operands)) {
+//            let values = Object.values(d.operands);
+//            if (values.includes(changedId)) {
+//                toRecalculate.push(d.id);
+//            }
+//        }
+//    });
+//    return toRecalculate;
+//}
 
 function isEmpty(obj) {
     return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+// dynamic sort function that sorts objects by their prop value
+function dynamicSort(prop) {
+    let sortOrder = 1;
+    if (prop[0] === "-") {
+        sortOrder = -1;
+        prop = prop.substr(1);
+    }
+
+    return function (a, b) {
+        // if a has no calcOrder prop
+        //if (!('calcOrder' in a)) {
+        //    return -1 * sortOrder;
+        //}
+
+        //if (!('calcOrder' in b)) {
+        //    return -1 * sortOrder;
+        //}
+
+        let res = (a[prop] < b[prop]) ? -1 : (a[prop] > b[prop]) ? 1 : 0;
+        return res * sortOrder;
+    }
 }
