@@ -8,7 +8,7 @@ export default props => (
   <Navbar inverse fixedTop fluid collapseOnSelect>
     <Navbar.Header>
       <Navbar.Brand>
-        <Link to={'/'}>Hydronamiv</Link>
+        <Link to={'/'}>Гидронамыв 1.0</Link>
       </Navbar.Brand>
       <Navbar.Toggle />
     </Navbar.Header>
@@ -16,30 +16,31 @@ export default props => (
       <Nav>
         <LinkContainer to={'/'} exact>
           <NavItem>
-            <Glyphicon glyph='home' /> Home
+            <Glyphicon glyph='home' /> Главная
           </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/counter'}>
-          <NavItem>
-            <Glyphicon glyph='education' /> Counter
-          </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/fetchdata'}>
-          <NavItem>
-            <Glyphicon glyph='th-list' /> Fetch data
-          </NavItem>
-        </LinkContainer>
+        </LinkContainer>        
         <LinkContainer to={'/block1'}>
           <NavItem>
-            <Glyphicon glyph='th-list' /> Исходные данные
+            <Glyphicon glyph='th-list' /> 1. Исходные данные
           </NavItem>
         </LinkContainer>
         <LinkContainer to={'/block2'}>
           <NavItem>
-            <Glyphicon glyph='th-list' /> Производительность земснаряда
+            <Glyphicon glyph='th-list' /> 2. Производительность земснаряда
           </NavItem>
         </LinkContainer>
       </Nav>
     </Navbar.Collapse>
   </Navbar>
 );
+
+//<LinkContainer to={'/counter'}>
+//    <NavItem>
+//        <Glyphicon glyph='education' /> Counter
+//          </NavItem>
+//</LinkContainer>
+//    <LinkContainer to={'/fetchdata'}>
+//        <NavItem>
+//            <Glyphicon glyph='th-list' /> Fetch data
+//          </NavItem>
+//    </LinkContainer>
