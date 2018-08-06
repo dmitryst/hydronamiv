@@ -8,7 +8,7 @@
             not: '1.jpg', // notation
             val: 'песок',  // value
             um: '', // unit of measure
-            isInput: false,
+            isInput: true,
             calcOrder: 0,
         },
         {
@@ -272,7 +272,7 @@
             not: '',
             val: 'Гидромех 2000',
             um: '',
-            isInput: false,
+            isInput: true,
             calcOrder: 0,
         },
         {
