@@ -25,9 +25,7 @@ export const reducer = (state = [], action)  => {
         // recalculation
         let sortedItems = items.sort(dynamicSort("calcOrder"));
         sortedItems.forEach(i => {
-            if (i.calcOrder === 12) {
-                let t;
-            }
+
             let obj = newState.find(x => x.id === i.id);
 
             // if obj has operands prop and operands prop has some values
@@ -47,7 +45,14 @@ export const reducer = (state = [], action)  => {
                 //console.log(result);
 
                 let el = newState.find(x => x.id === i.id);
-                el.val = Math.round((result + 0.00001) * 100) / 100;
+                let roundKoeff;
+                if ('round' in i) {
+                    roundKoeff = Math.pow(10, i.round)
+                }
+                else {
+                    roundKoeff = 100;
+                }
+                el.val = Math.round((result + 0.00001) * roundKoeff) / roundKoeff;
             }           
         });
 
