@@ -3,7 +3,7 @@ import getItems from "../items.js";
 const items = getItems();
 const Parser = require("expr-eval").Parser;
 
-export const reducer = (state = [], action)  => {
+export const reducer = (state = [], action) => {
     if (action.type === loadItemsType) {
         return action.items;
     }
@@ -16,50 +16,92 @@ export const reducer = (state = [], action)  => {
         //console.log(newState);
 
         let el = newState.find(d => d.id === changedId);
-        el.val = parseFloat(newValue);
 
-        // find all ids that should be re-calculate
-        //const toRecalculate = getAllDependentDataId(changedId);
-        //console.log(toRecalculate);
+        let recalculate = shouldRecalculate(changedId);
+        if (recalculate) {
+            el.val = parseFloat(newValue);
 
-        // recalculation
-        let sortedItems = items.sort(dynamicSort("calcOrder"));
-        sortedItems.forEach(i => {
+            // find all ids that should be re-calculate
+            //const toRecalculate = getAllDependentDataId(changedId);
+            //console.log(toRecalculate);
 
-            let obj = newState.find(x => x.id === i.id);
+            // recalculation
+            let sortedItems = items.sort(dynamicSort("calcOrder"));
+            sortedItems.forEach(i => {
 
-            // if obj has operands prop and operands prop has some values
-            if (('operands' in obj) && (Object.keys(obj.operands).length !== 0)) {
-                let operandsObj = {};
+                let obj = newState.find(x => x.id === i.id);
 
-                Object.keys(obj.operands).forEach(e => {
-                    //console.log(`key=${e}  value=${obj.operands[e]}`);
-                    let o = newState.find(x => x.id === obj.operands[e]);
+                //debug
+                //if (i.id === 117)
+                //{
+                //    let y;
+                //    y = 1;
+                //}
 
-                    operandsObj[`${e}`] = o.val;
-                });
-                //console.log(operandsObj);
+                // if obj has operands prop and operands prop has some values
+                if (('operands' in obj) && (Object.keys(obj.operands).length !== 0)) {
+                    let operandsObj = {};
 
-                let expr = Parser.parse(obj.formula);
-                let result = expr.evaluate(operandsObj);
-                //console.log(result);
+                    Object.keys(obj.operands).forEach(e => {
+                        //console.log(`key=${e}  value=${obj.operands[e]}`);
+                        let o = newState.find(x => x.id === obj.operands[e]);
 
-                let el = newState.find(x => x.id === i.id);
-                let roundKoeff;
-                if ('round' in i) {
-                    roundKoeff = Math.pow(10, i.round)
+                        try {
+                            operandsObj[`${e}`] = o.val;
+                        } catch (e) {
+                            console.log("Error operandsObj[`${e}`] = o.val, id = " + i.id, o);
+                        }
+                        
+                    });
+                    //console.log(operandsObj);
+
+                    let expr, result;
+                    try {
+                        expr = Parser.parse(obj.formula);
+                        result = expr.evaluate(operandsObj);
+                    }
+                    catch (e) {
+                        console.log("Error parse formula: id = " + i.id);
+                    }
+
+                    //console.log(result);
+
+                    let el = newState.find(x => x.id === i.id);
+                    let roundKoeff;
+                    if ('round' in i) {
+                        roundKoeff = Math.pow(10, i.round)
+                    }
+                    else {
+                        roundKoeff = 100;
+                    }
+                    el.val = Math.round((result + 0.00001) * roundKoeff) / roundKoeff;
                 }
-                else {
-                    roundKoeff = 100;
-                }
-                el.val = Math.round((result + 0.00001) * roundKoeff) / roundKoeff;
-            }           
-        });
+            });
+        }
+        else {
+            el.val = newValue;
+        }
 
         //console.log(newState);
         return newState;
     }
     return state;
+}
+
+// check whether we should recalculate formulas on changing an input value
+function shouldRecalculate(changedId) {
+    let result = false;
+    items.some(i => {
+        let exists = false;
+        if (i.id !== i && 'operands' in i && (Object.keys(i.operands).lenght !== 0)) {
+            exists = Object.values(i.operands).some(val => {
+                return val === changedId;
+            });
+            if (exists) result = true;
+        }
+        return exists;
+    });
+    return result;
 }
 
 //function getAllDependentDataId(changedId) {

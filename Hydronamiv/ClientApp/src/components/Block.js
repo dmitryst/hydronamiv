@@ -8,44 +8,40 @@ let block;
 let blockNumber;
 
 function Block1Item(props) {
-    if (props.block === 1)
-        return (
-            <tr key={props.id}>
-                <td>{props.rn}</td>
-                <td>{props.name}</td>
+    return (
+        <tr key={props.id}>
+            <td>{props.rn}</td>
+            <td>{props.name}</td>
 
-                {props.not !== "" ? (
-                    <td>
-                        <img src={"img/" + props.not} />
-                    </td>
-                ) : (
-                        <td />
-                    )}
+            {props.not !== "" ? (
+                <td>
+                    <img src={"img/" + props.not} />
+                </td>
+            ) : (
+                    <td />
+                )}
 
-                {props.isInput ? (
-                    <td>
-                        <input type="text" value={props.val} onChange={props.onChange} />
-                    </td>
-                ) : (
-                        <td>{props.val}</td>
-                    )}
+            {props.isInput ? (
+                <td>
+                    <input type={props.type !== undefined ? props.type : 'number'} value={props.val} onChange={props.onChange} />
+                </td>
+            ) : (
+                    <td>{props.val}</td>
+                )}
 
-                <td>{props.um}</td>
-            </tr>
-        );
-    return <tr></tr>
+            <td>{props.um}</td>
+        </tr>
+    );
 }
 
 function Block2Item(i) {
-    if (i.block === 2) {
-        if (i.parent === 0)
-            return (
-                <ParentBlock2Item {...i} />
-            )
-        else return (
-            <ChildBlock2Item {...i} />
+    if (i.parent === 0)
+        return (
+            <ParentBlock2Item {...i} />
         )
-    }
+    else return (
+        <ChildBlock2Item {...i} />
+    )
     return <tr></tr>
 }
 
@@ -71,7 +67,7 @@ function ParentBlock2Item(props) {
                 )}
 
             <td><strong>{props.um}</strong></td>
-            <td><strong></strong></td>
+            <td>{props.comment} {props.commentImg !== undefined ? <img src={"img/" + props.commentImg} /> : <span></span> }</td>
         </tr>
     );
 }
@@ -82,23 +78,34 @@ function ChildBlock2Item(props) {
             <td>{props.rn}</td>
 
             <td>
-            {props.not !== "" ? (               
+                {props.not !== "" ? (
                     <img src={"img/" + props.not} />
-            ) : (
-                    <img />
-                )}
-            - {props.name}</td>
+                ) : (
+                        <img />
+                    )}
+                - {props.name}</td>
 
             {props.isInput ? (
                 <td>
-                    <input type="text" value={props.val} onChange={props.onChange} />
+                    <input type="number" value={props.val} onChange={props.onChange} style={{ width: 5 + 'em' }} />
                 </td>
             ) : (
                     <td>{props.val}</td>
                 )}
 
             <td>{props.um}</td>
-            <td>{props.comment}</td>
+            <td>{props.comment} {props.commentImg !== undefined ? <img src={"img/" + props.commentImg} /> : <span></span>}</td>
+        </tr>
+    );
+}
+
+function Block7Item(props) {
+    return (
+        <tr key={props.id}>
+            <td>{props.rn}</td>
+            <td>{props.name}</td>
+            <td>{props.um}</td>
+            <td>{props.val}</td>         
         </tr>
     );
 }
@@ -131,6 +138,7 @@ class Block extends Component {
                 um={i.um}
                 isInput={i.isInput}
                 parent={i.parent}
+                type={i.type}
                 onChange={e =>
                     this.props.changeValue({ id: i.id, value: e.target.value })
                 }
@@ -152,9 +160,27 @@ class Block extends Component {
                 isInput={i.isInput}
                 parent={i.parent}
                 comment={i.comment}
+                commentImg={i.commentImg}
                 onChange={e =>
                     this.props.changeValue({ id: i.id, value: e.target.value })
                 }
+            />
+        );
+    }
+
+    renderBlock7Item(i) {
+        return (
+            <Block7Item
+                key={i.id}
+                id={i.id}
+                block={i.block}
+                rn={i.rn}
+                name={i.name}
+                not={i.not}
+                val={i.val}
+                um={i.um}
+                isInput={i.isInput}
+                parent={i.parent}              
             />
         );
     }
@@ -173,7 +199,7 @@ class Block extends Component {
                             <th>Ед. измерения</th>
                         </tr>
                     </thead>
-                    <tbody>{this.props.items.map(x => this.renderBlock1Item(x))}</tbody>
+                    <tbody>{this.props.items.filter(x => x.block === 1).map(x => this.renderBlock1Item(x))}</tbody>
                 </table>
             </div>
         );
@@ -193,7 +219,86 @@ class Block extends Component {
                             <th>Прим.</th>
                         </tr>
                     </thead>
-                    <tbody>{this.props.items.map(x => this.renderBlock2Item(x))}</tbody>
+                    <tbody>{this.props.items.filter(x => x.block === 2).map(x => this.renderBlock2Item(x))}</tbody>
+                </table>
+            </div>
+        );
+    }
+
+    renderBlock3() {
+        return (
+            <div>
+                <h2>Блок 3. Расчет гидротранспорта грунта от карьера до карты намыва (производится по методике Всесоюзного научно-исследовательского института гидротехники им. Б.Е.Веденеева (ВНИИГ)</h2>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>№п.п.</th>
+                            <th>Наименование/Расчетная формула</th>
+                            <th>Значение</th>
+                            <th>Ед. измерения</th>
+                            <th>Прим.</th>
+                        </tr>
+                    </thead>
+                    <tbody>{this.props.items.filter(x => x.block === 3).map(x => this.renderBlock2Item(x))}</tbody>
+                </table>
+            </div>
+        );
+    }
+
+    renderBlock4() {
+        return (
+            <div>
+                <h2>Блок 4. Расчет водосбросных сооружений на карте намыва</h2>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>№п.п.</th>
+                            <th>Наименование/Расчетная формула</th>
+                            <th>Значение</th>
+                            <th>Ед. измерения</th>
+                            <th>Прим.</th>
+                        </tr>
+                    </thead>
+                    <tbody>{this.props.items.filter(x => x.block === 4).map(x => this.renderBlock2Item(x))}</tbody>
+                </table>
+            </div>
+        );
+    }
+
+    renderBlock5() {
+        return (
+            <div>
+                <h2>Блок 5. Расчет основных параметров карты намыва</h2>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>№п.п.</th>
+                            <th>Наименование/Расчетная формула</th>
+                            <th>Значение</th>
+                            <th>Ед. измерения</th>
+                            <th>Прим.</th>
+                        </tr>
+                    </thead>
+                    <tbody>{this.props.items.filter(x => x.block === 5).map(x => this.renderBlock2Item(x))}</tbody>
+                </table>
+            </div>
+        );
+    }
+
+    renderBlock7() {
+        return (
+            <div>
+                <h2>Основные расчетные показатели</h2>
+                <table className="table">
+                    <thead>
+                        <tr>
+                            <th>№п.п.</th>
+                            <th>Наименование</th>
+                            <th>Ед. измерения</th>
+                            <th>Значение</th>                         
+                        </tr>
+                    </thead>
+                    <tbody>{this.props.items.filter(x => x.block === 7).map(x => this.renderBlock7Item(x))}</tbody>
                 </table>
             </div>
         );
@@ -207,6 +312,22 @@ class Block extends Component {
 
         if (this.props.location.pathname === '/block2') {
             return this.renderBlock2()
+        }
+
+        if (this.props.location.pathname === '/block3') {
+            return this.renderBlock3()
+        }
+
+        if (this.props.location.pathname === '/block4') {
+            return this.renderBlock4()
+        }
+
+        if (this.props.location.pathname === '/block5') {
+            return this.renderBlock5()
+        }
+
+        if (this.props.location.pathname === '/block7') {   // Основные расчетные показатели
+            return this.renderBlock7()
         }
 
         else return <div>Не найден раздел для отображения</div>

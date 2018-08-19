@@ -21,12 +21,37 @@ export default props => (
         </LinkContainer>        
         <LinkContainer to={'/block1'}>
           <NavItem>
-            <Glyphicon glyph='th-list' /> 1. Исходные данные
+            <Glyphicon glyph='th-list' /> 1.Исходные данные
           </NavItem>
         </LinkContainer>
         <LinkContainer to={'/block2'}>
           <NavItem>
-            <Glyphicon glyph='th-list' /> 2. Производительность земснаряда
+            <Glyphicon glyph='th-list' /> 2.Расчет производительности земснаряда
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/block3'}>
+          <NavItem>
+            <Glyphicon glyph='th-list' /> 3.Расчет гидротранспорта грунта от карьера до карты намыва
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/block4'}>
+          <NavItem>
+            <Glyphicon glyph='th-list' /> 4.Расчет водосбросных сооружений на карте намыва
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/block5'}>
+          <NavItem>
+            <Glyphicon glyph='th-list' /> 5.Расчет основных параметров карты намыва
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/block7'}>
+          <NavItem>
+            <Glyphicon glyph='download-alt' /> Основные расчетные показатели
+          </NavItem>
+        </LinkContainer>
+        <LinkContainer to={'/about'}>
+          <NavItem>
+            <Glyphicon glyph='th-large' /> О программе
           </NavItem>
         </LinkContainer>
       </Nav>
