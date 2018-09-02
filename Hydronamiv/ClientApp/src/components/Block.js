@@ -7,6 +7,12 @@ let itemsLoaded;
 let block;
 let blockNumber;
 
+const THead = ({ columns }) => {
+    return (
+        <thead><tr>{columns.map(col => { return <th>{col}</th> })}</tr></thead>  
+        );
+}
+
 function Block1Item(props) {
     return (
         <tr key={props.id}>
@@ -102,20 +108,20 @@ function ChildBlock2Item(props) {
 function Block7Item(props) {
     return (
         props.parent !== 0 ? (
-                <tr key={props.id}>
+            <tr key={props.id}>
                 <td>{props.rn}</td>
                 <td>{props.name}</td>
                 <td>{props.um}</td>
                 <td>{props.val}</td>
+            </tr>
+        ) : (
+                <tr key={props.id}>
+                    <td><b>{props.rn}</b></td>
+                    <td><b>{props.name}</b></td>
+                    <td><b>{props.um}</b></td>
+                    <td><b>{props.val}</b></td>
                 </tr>
-            ) : (
-               <tr key={props.id}>
-               <td><b>{props.rn}</b></td>
-               <td><b>{props.name}</b></td>
-               <td><b>{props.um}</b></td>
-               <td><b>{props.val}</b></td>
-               </tr>
-                )       
+            )
     );
 }
 
@@ -199,15 +205,7 @@ class Block extends Component {
             <div className="block">
                 <h2>Блок 1. Исходные данные для расчета</h2>
                 <table className="table">
-                    <thead>
-                        <tr>
-                            <th>№п.п.</th>
-                            <th>Наименование</th>
-                            <th>Обозначение</th>
-                            <th>Количество</th>
-                            <th>Ед. измерения</th>
-                        </tr>
-                    </thead>
+                    <THead columns={["№п.п.", "Наименование", "Обозначение", "Количество", "Ед. измерения"]} />
                     <tbody>{this.props.items.filter(x => x.block === 1).map(x => this.renderBlock1Item(x))}</tbody>
                 </table>
             </div>
@@ -219,15 +217,7 @@ class Block extends Component {
             <div className="block">
                 <h2>Блок 2. Расчет производительности земснаряда</h2>
                 <table className="table">
-                    <thead>
-                        <tr>
-                            <th>№п.п.</th>
-                            <th>Наименование/Расчетная формула</th>
-                            <th>Значение</th>
-                            <th>Ед. измерения</th>
-                            <th>Прим.</th>
-                        </tr>
-                    </thead>
+                    <THead columns={["№п.п.", "Наименование/Расчетная формула", "Значение", "Ед. измерения", "Прим."]} />
                     <tbody>{this.props.items.filter(x => x.block === 2).map(x => this.renderBlock2Item(x))}</tbody>
                 </table>
             </div>
@@ -239,15 +229,7 @@ class Block extends Component {
             <div className="block">
                 <h2>Блок 3. Расчет гидротранспорта грунта от карьера до карты намыва (производится по методике Всесоюзного научно-исследовательского института гидротехники им. Б.Е.Веденеева (ВНИИГ)</h2>
                 <table className="table">
-                    <thead>
-                        <tr>
-                            <th>№п.п.</th>
-                            <th>Наименование/Расчетная формула</th>
-                            <th>Значение</th>
-                            <th>Ед. измерения</th>
-                            <th>Прим.</th>
-                        </tr>
-                    </thead>
+                    <THead columns={["№п.п.", "Наименование/Расчетная формула", "Значение", "Ед. измерения", "Прим."]} />
                     <tbody>{this.props.items.filter(x => x.block === 3).map(x => this.renderBlock2Item(x))}</tbody>
                 </table>
             </div>
@@ -259,15 +241,7 @@ class Block extends Component {
             <div className="block">
                 <h2>Блок 4. Расчет водосбросных сооружений на карте намыва</h2>
                 <table className="table">
-                    <thead>
-                        <tr>
-                            <th>№п.п.</th>
-                            <th>Наименование/Расчетная формула</th>
-                            <th>Значение</th>
-                            <th>Ед. измерения</th>
-                            <th>Прим.</th>
-                        </tr>
-                    </thead>
+                    <THead columns={["№п.п.", "Наименование/Расчетная формула", "Значение", "Ед. измерения", "Прим."]} />
                     <tbody>{this.props.items.filter(x => x.block === 4).map(x => this.renderBlock2Item(x))}</tbody>
                 </table>
             </div>
@@ -279,15 +253,7 @@ class Block extends Component {
             <div className="block">
                 <h2>Блок 5. Расчет основных параметров карты намыва</h2>
                 <table className="table">
-                    <thead>
-                        <tr>
-                            <th>№п.п.</th>
-                            <th>Наименование/Расчетная формула</th>
-                            <th>Значение</th>
-                            <th>Ед. измерения</th>
-                            <th>Прим.</th>
-                        </tr>
-                    </thead>
+                    <THead columns={["№п.п.", "Наименование/Расчетная формула", "Значение", "Ед. измерения", "Прим."]} />
                     <tbody>{this.props.items.filter(x => x.block === 5).map(x => this.renderBlock2Item(x))}</tbody>
                 </table>
             </div>
@@ -301,16 +267,9 @@ class Block extends Component {
                 <button type="button" className="btn btn-default" onClick={() => this.downloadWordDocument()}>
                     <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Скачать в Word
                 </button>
-                <br/>
+                <br /><br />
                 <table className="table">
-                    <thead>
-                        <tr>
-                            <th>№п.п.</th>
-                            <th>Наименование</th>
-                            <th>Ед. измерения</th>
-                            <th>Значение</th>
-                        </tr>
-                    </thead>
+                    <THead columns={["№п.п.", "Наименование", "Ед. измерения", "Значение"]} />               
                     <tbody>{this.props.items.filter(x => x.block === 7).map(x => this.renderBlock7Item(x))}</tbody>
                 </table>
             </div>
