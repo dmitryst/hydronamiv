@@ -48,16 +48,16 @@ export default props => (
           <NavItem>
             <Glyphicon glyph='download-alt' /> Основные расчетные показатели
           </NavItem>
-        </LinkContainer>
-        <LinkContainer to={'/about'}>
-          <NavItem>
-            <Glyphicon glyph='th-large' /> О программе
-          </NavItem>
-        </LinkContainer>
-      </Nav>
+        </LinkContainer>     
+       </Nav>
     </Navbar.Collapse>
+    
   </Navbar>
 );
+
+//<Navbar.Text>
+    //   Разработка сайта: <Navbar.Link href="mailto:dmitry_stepanov@inbox.ru/">DS</Navbar.Link>
+    //</Navbar.Text>
 
 //<LinkContainer to={'/counter'}>
 //    <NavItem>
@@ -69,3 +69,9 @@ export default props => (
 //            <Glyphicon glyph='th-list' /> Fetch data
 //          </NavItem>
 //    </LinkContainer>
+
+//<LinkContainer to={'/about'}>
+        //  <NavItem>
+        //    <Glyphicon glyph='th-large' /> О программе
+        //  </NavItem>
+        //</LinkContainer>

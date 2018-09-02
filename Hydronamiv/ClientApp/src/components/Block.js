@@ -23,7 +23,7 @@ function Block1Item(props) {
 
             {props.isInput ? (
                 <td>
-                    <input type={props.type !== undefined ? props.type : 'number'} value={props.val} onChange={props.onChange} />
+                    <input type={props.type !== undefined ? props.type : 'number'} value={props.val} onChange={props.onChange} style={{ width: 8 + 'em' }} />
                 </td>
             ) : (
                     <td>{props.val}</td>
@@ -67,7 +67,7 @@ function ParentBlock2Item(props) {
                 )}
 
             <td><strong>{props.um}</strong></td>
-            <td>{props.comment} {props.commentImg !== undefined ? <img src={"img/" + props.commentImg} /> : <span></span> }</td>
+            <td>{props.comment} {props.commentImg !== undefined ? <img src={"img/" + props.commentImg} /> : <span></span>}</td>
         </tr>
     );
 }
@@ -101,12 +101,21 @@ function ChildBlock2Item(props) {
 
 function Block7Item(props) {
     return (
-        <tr key={props.id}>
-            <td>{props.rn}</td>
-            <td>{props.name}</td>
-            <td>{props.um}</td>
-            <td>{props.val}</td>         
-        </tr>
+        props.parent !== 0 ? (
+                <tr key={props.id}>
+                <td>{props.rn}</td>
+                <td>{props.name}</td>
+                <td>{props.um}</td>
+                <td>{props.val}</td>
+                </tr>
+            ) : (
+               <tr key={props.id}>
+               <td><b>{props.rn}</b></td>
+               <td><b>{props.name}</b></td>
+               <td><b>{props.um}</b></td>
+               <td><b>{props.val}</b></td>
+               </tr>
+                )       
     );
 }
 
@@ -180,14 +189,14 @@ class Block extends Component {
                 val={i.val}
                 um={i.um}
                 isInput={i.isInput}
-                parent={i.parent}              
+                parent={i.parent}
             />
         );
     }
 
     renderBlock1() {
         return (
-            <div>
+            <div className="block">
                 <h2>Блок 1. Исходные данные для расчета</h2>
                 <table className="table">
                     <thead>
@@ -207,7 +216,7 @@ class Block extends Component {
 
     renderBlock2() {
         return (
-            <div>
+            <div className="block">
                 <h2>Блок 2. Расчет производительности земснаряда</h2>
                 <table className="table">
                     <thead>
@@ -227,7 +236,7 @@ class Block extends Component {
 
     renderBlock3() {
         return (
-            <div>
+            <div className="block">
                 <h2>Блок 3. Расчет гидротранспорта грунта от карьера до карты намыва (производится по методике Всесоюзного научно-исследовательского института гидротехники им. Б.Е.Веденеева (ВНИИГ)</h2>
                 <table className="table">
                     <thead>
@@ -247,7 +256,7 @@ class Block extends Component {
 
     renderBlock4() {
         return (
-            <div>
+            <div className="block">
                 <h2>Блок 4. Расчет водосбросных сооружений на карте намыва</h2>
                 <table className="table">
                     <thead>
@@ -267,7 +276,7 @@ class Block extends Component {
 
     renderBlock5() {
         return (
-            <div>
+            <div className="block">
                 <h2>Блок 5. Расчет основных параметров карты намыва</h2>
                 <table className="table">
                     <thead>
@@ -287,21 +296,36 @@ class Block extends Component {
 
     renderBlock7() {
         return (
-            <div>
+            <div className="block">
                 <h2>Основные расчетные показатели</h2>
+                <button type="button" className="btn btn-default" onClick={() => this.downloadWordDocument()}>
+                    <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span> Скачать в Word
+                </button>
+                <br/>
                 <table className="table">
                     <thead>
                         <tr>
                             <th>№п.п.</th>
                             <th>Наименование</th>
                             <th>Ед. измерения</th>
-                            <th>Значение</th>                         
+                            <th>Значение</th>
                         </tr>
                     </thead>
                     <tbody>{this.props.items.filter(x => x.block === 7).map(x => this.renderBlock7Item(x))}</tbody>
                 </table>
             </div>
         );
+    }
+
+    downloadWordDocument() {
+        let str = "";
+        this.props.items.filter(x => x.block === 7 && x.val !== "").forEach(x => {
+            str = str + `${x.id}` + ":" + `${x.val}` + ",";
+        });
+
+        str = str.substring(0, str.length - 1);
+
+        window.location = ("api/Items/PrintWordDoc?data=" + str);
     }
 
     // интересно, что сначала вызывается render() метод, а потом уже componentDidMount()

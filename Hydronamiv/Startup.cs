@@ -1,3 +1,4 @@
+using Hydronamiv.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -21,6 +22,9 @@ namespace Hydronamiv
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddSingleton<IPathProvider, PathProvider>();
+            services.AddSingleton<IPrintDocumentService, PrintDocumentService>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
