@@ -1,23 +1,35 @@
 ﻿import React from 'react';
 import { Route } from 'react-router';
+import { Redirect } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './components/Home';
-import Counter from './components/Counter';
-import FetchData from './components/FetchData';
 import Block from './components/Block';
-import About from './components/About';
+import LogIn from './components/LogIn';
+
+export const auth = {
+    isAuthenticated: false
+}
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+    <Route {...rest} render={(props) =>
+        auth.isAuthenticated
+            ? <Component {...props} />
+            : <Redirect to={{
+                pathname: '/login',
+                state: { from: props.location }
+            }} />
+    } />    
+)
 
 export default () => (
     <Layout>
         <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetchdata/:startDateIndex?' component={FetchData} />
-        <Route path='/block1' component={Block} />
-        <Route path='/block2' component={Block} />
-        <Route path='/block3' component={Block} />
-        <Route path='/block4' component={Block} />
-        <Route path='/block5' component={Block} />
-        <Route path='/block7' component={Block} />
-        <Route path='/about' component={About} />
+        <PrivateRoute path='/block1' component={Block} />
+        <PrivateRoute path='/block2' component={Block} />
+        <PrivateRoute path='/block3' component={Block} />
+        <PrivateRoute path='/block4' component={Block} />
+        <PrivateRoute path='/block5' component={Block} />
+        <PrivateRoute path='/block7' component={Block} />
+        <Route path='/login' component={LogIn} /> 
     </Layout>
 );

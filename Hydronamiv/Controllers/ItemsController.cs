@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hydronamiv.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hydronamiv.Controllers
@@ -15,6 +16,18 @@ namespace Hydronamiv.Controllers
         public ItemsController(IPrintDocumentService printDocumentService)
         {
             _printDocumentService = printDocumentService;
+        }
+
+        [HttpGet("[action]")]
+        public string GetCookies(string key)
+        {
+            return Request.Cookies[key];
+        }
+
+        [HttpGet("[action]"), Authorize]
+        public IActionResult IsAuthenticated()
+        {
+            return Ok();
         }
 
         [HttpGet("[action]")]

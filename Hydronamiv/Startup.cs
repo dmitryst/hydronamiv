@@ -1,7 +1,10 @@
+using Hydronamiv.Middlewares;
+using Hydronamiv.Models;
 using Hydronamiv.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
@@ -23,8 +26,11 @@ namespace Hydronamiv
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddJwtAuthentication(Configuration["Jwt:Issuer"], Configuration["Jwt:Key"]);
+
             services.AddSingleton<IPathProvider, PathProvider>();
             services.AddSingleton<IPrintDocumentService, PrintDocumentService>();
+            services.AddScoped<IPasswordHasher<UserModel>, PasswordHasher<UserModel>>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -49,6 +55,7 @@ namespace Hydronamiv
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

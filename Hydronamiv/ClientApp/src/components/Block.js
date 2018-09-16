@@ -48,7 +48,6 @@ function Block2Item(i) {
     else return (
         <ChildBlock2Item {...i} />
     )
-    return <tr></tr>
 }
 
 function ParentBlock2Item(props) {
@@ -127,7 +126,7 @@ function Block7Item(props) {
 
 class Block extends Component {
 
-    componentDidMount() {
+    componentDidMount() {  
         block = this.props.location.pathname;
         let lastChar = block.substr(block.length - 1);
         blockNumber = parseFloat(lastChar);
@@ -279,7 +278,7 @@ class Block extends Component {
     downloadWordDocument() {
         let str = "";
         this.props.items.filter(x => x.block === 7 && x.val !== "").forEach(x => {
-            str = str + `${x.id}` + ":" + `${x.val}` + ",";
+            str = `${str}${x.id}:${x.val},`;
         });
 
         str = str.substring(0, str.length - 1);
@@ -289,6 +288,7 @@ class Block extends Component {
 
     // интересно, что сначала вызывается render() метод, а потом уже componentDidMount()
     render() {
+
         if (this.props.location.pathname === '/block1') {
             return this.renderBlock1()
         }
