@@ -5,7 +5,8 @@ const authenticationError = 'AUTHENTICATION_ERROR';
 const initialState = {
     isAuthenticated: false,
     error: '',
-    token: ''
+    token: '',
+    numberOfLogins: 0
 }
 
 export const actionCreators = {
@@ -22,14 +23,25 @@ export const actionCreators = {
                     credentials: 'same-origin'
                 });
 
-            const token = await response.text();
+            console.log(response.status);
 
-            console.log(token);
+            //const status = response.status;
 
-            dispatch({
-                type: authenticated,
-                token
-            });
+            if (response.status === 200) {
+                const token = await response.text();
+                console.log(token);
+
+                dispatch({
+                    type: authenticated,
+                    token
+                });
+            }
+            else {  // 401 
+                dispatch({
+                    type: unauthenticated,
+                    error: 'Неправильный email или пароль'
+                });
+            }          
 
         } catch (e) {
             console.log(e);
@@ -49,18 +61,22 @@ export const reducer = (state, action) => {
             return {
                 ...state,
                 isAuthenticated: true,
-                token: action.token               
+                token: action.token,
+                numberOfLogins: state.numberOfLogins + 1
             };
         case unauthenticated:
             return {
                 ...state,
-                isAuthenticated: false
+                isAuthenticated: false,
+                error: action.error,
+                numberOfLogins: state.numberOfLogins + 1
             };
         case authenticationError:
             return {
                 ...state,
                 isAuthenticated: false,
-                error: action.error
+                error: action.error,
+                numberOfLogins: state.numberOfLogins + 1
             };
     }
     return state;

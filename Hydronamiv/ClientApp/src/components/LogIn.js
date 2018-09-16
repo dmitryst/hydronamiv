@@ -13,12 +13,17 @@ class LogIn extends Component {
             password: ''
         },
         error: '',
-        isAuthenticated: false
+        isAuthenticated: false,
+        numberOfLogins: 0
     }
 
+    // numberOfLogins каждый раз привавляется на 1,
+    // поэтому componentWillReceiveProps после редюсера каждый раз вызывается
+    // и обновляет сообщение об ошибке
     componentWillReceiveProps(nextProps) {
         console.log(nextProps);
         this.setState({ isAuthenticated: nextProps.isAuthenticated });
+        this.setState({ error: nextProps.error });
     }
 
     dismissError = () => {
@@ -79,7 +84,7 @@ class LogIn extends Component {
                             <div className="panel-body">
                                 <div className="row">
                                     <div className="col-lg-12">
-                                        <form id="login-form" onSubmit={this.handleSubmit} style={{ display: 'block' }}>
+                                        <form onSubmit={this.handleSubmit} style={{ display: 'block' }}>
                                             {
                                                 this.state.error &&
                                                 <h3 data-test="error" onClick={this.dismissError}>
@@ -94,7 +99,7 @@ class LogIn extends Component {
                                                     name="username"
                                                     tabIndex="1"
                                                     className="form-control"
-                                                    placeholder="E-mail"
+                                                    placeholder="E-mail / Логин"
                                                     value={credentials.username}
                                                     onChange={this.handleChange} />
                                             </div>
@@ -135,7 +140,8 @@ const mapStateToProps = state => {
     return {
         isAuthenticated: state.logIn.isAuthenticated,
         error: state.logIn.error,
-        token: state.logIn.token
+        token: state.logIn.token,
+        numberOfLogins: state.logIn.numberOfLogins
     }
 }
 

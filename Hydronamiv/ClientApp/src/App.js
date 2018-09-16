@@ -1,4 +1,4 @@
-﻿import React from 'react';
+﻿import React, { Component } from 'react';
 import { Route } from 'react-router';
 import { Redirect } from 'react-router-dom';
 import Layout from './components/Layout';
@@ -21,15 +21,21 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     } />    
 )
 
-export default () => (
-    <Layout>
-        <Route exact path='/' component={Home} />
-        <PrivateRoute path='/block1' component={Block} />
-        <PrivateRoute path='/block2' component={Block} />
-        <PrivateRoute path='/block3' component={Block} />
-        <PrivateRoute path='/block4' component={Block} />
-        <PrivateRoute path='/block5' component={Block} />
-        <PrivateRoute path='/block7' component={Block} />
-        <Route path='/login' component={LogIn} /> 
-    </Layout>
-);
+class App extends Component {
+    render() {
+        return (
+            <Layout>
+                <Route exact path='/' component={Home} />
+                <PrivateRoute path='/block1' component={Block} />
+                <PrivateRoute path='/block2' component={Block} />
+                <PrivateRoute path='/block3' component={Block} />
+                <PrivateRoute path='/block4' component={Block} />
+                <PrivateRoute path='/block5' component={Block} />
+                <PrivateRoute path='/block7' component={Block} />
+                <Route path='/login' component={LogIn} />
+            </Layout>
+        )
+    }
+}
+
+export default App;

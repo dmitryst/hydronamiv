@@ -25,7 +25,7 @@ namespace Hydronamiv.Controllers
         }
 
         [HttpPost("[action]")]
-        public string Authenticate([FromBody] LoginModel login)
+        public ActionResult<string> Authenticate([FromBody] LoginModel login)
         {
             string token = null;
 
@@ -46,9 +46,11 @@ namespace Hydronamiv.Controllers
                 token = CreateToken();
 
                SaveToken("token", token);
+
+                return token;
             }
 
-            return token;
+            return Unauthorized();
         }
 
         private void SaveToken(string key, string value, int expireTime = 1)
