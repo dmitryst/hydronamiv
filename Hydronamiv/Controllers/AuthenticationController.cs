@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Hydronamiv.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     public class AuthenticationController : Controller
     {
         private readonly IConfiguration _config;
@@ -24,17 +24,22 @@ namespace Hydronamiv.Controllers
             _passwordHasher = passwordHasher;
         }
 
-        [HttpPost("[action]")]
-        public ActionResult<string> Authenticate([FromBody] LoginModel login)
+        [HttpPost] // Matches '/api/Authentication/LogIn'
+        public ActionResult<string> LogIn([FromBody] LoginModel login)
         {
             string token = null;
 
             var user = _config.GetSection("Users").Get<List<UserModel>>().AsEnumerable()
                 .FirstOrDefault(x => x.Username == login.Username);
 
-            if (user == null || user.Expired < DateTime.Now)  // to do
+            if (user == null)
             {
-                return null;
+                return NotFound();  // 404
+            }
+
+            if (user.Expired < DateTime.Now)  // to do
+            {
+                return Forbid();    // 403
             }
 
             var hashedPassword = user.Password;
@@ -75,11 +80,24 @@ namespace Hydronamiv.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        [HttpGet]
-        public IActionResult HashPassword(string password)
+
+        [HttpGet("{password}")] // Matches '/api/Authentication/HashPassword/password'
+        public ActionResult<string> HashPassword(string password)
         {
-            var hashedPassword = _passwordHasher.HashPassword(null, password);
-            return Json(hashedPassword);
+            return _passwordHasher.HashPassword(null, password);
+        }
+
+
+        [HttpGet]   // Matches '/api/Authentication/GetUtcTime'
+        public ActionResult<string> GetUtcTime()
+        {
+            return DateTime.Now.ToUniversalTime().ToString();
+        }
+
+        [HttpGet]   // Matches '/api/Authentication/GetServerLocalTime'
+        public ActionResult<string> GetServerLocalTime()
+        {
+            return DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToLongTimeString();
         }
     }
 }

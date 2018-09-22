@@ -1,6 +1,6 @@
-﻿const authenticated = 'AUTHENTICATED_USER';
-const unauthenticated = 'UNAUTHENTICATED_USER';
-const authenticationError = 'AUTHENTICATION_ERROR';
+﻿const AUTHENTICATED_USER = 'AUTHENTICATED_USER';
+const UNAUTHENTICATED_USER = 'UNAUTHENTICATED_USER';
+const AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR';
 
 const initialState = {
     isAuthenticated: false,
@@ -12,7 +12,7 @@ const initialState = {
 export const actionCreators = {
     requestLogIn: ({ username, password }) => async (dispatch) => {
         try {
-            const response = await fetch('api/Authentication/Authenticate',
+            const response = await fetch('api/Authentication/LogIn',
                 {
                     method: 'POST',
                     body: JSON.stringify({
@@ -32,22 +32,37 @@ export const actionCreators = {
                 console.log(token);
 
                 dispatch({
-                    type: authenticated,
+                    type: AUTHENTICATED_USER,
                     token
                 });
             }
-            else {  // 401 
+            else {  
+                let errorMsg;
+                switch (response.status) {
+                    case 401: // unathorized
+                        errorMsg = 'Неправильный пароль';         
+                        break;
+                    case 403: // forbidden
+                        errorMsg = 'Истёк срок лицензии';         
+                        break;
+                    case 404: // not found
+                        errorMsg = 'Неправильный email / логин';  
+                        break;
+                    default:
+                        errorMsg = 'Попробуйте снова';
+                }
+
                 dispatch({
-                    type: unauthenticated,
-                    error: 'Неправильный email или пароль'
+                    type: UNAUTHENTICATED_USER,
+                    error: errorMsg
                 });
             }          
 
         } catch (e) {
             console.log(e);
             dispatch({
-                type: authenticationError,
-                error: 'Invalid email or password'
+                type: AUTHENTICATION_ERROR,
+                error: e
             });
         }
     }
@@ -57,21 +72,21 @@ export const reducer = (state, action) => {
     state = state || initialState;
 
     switch (action.type) {
-        case authenticated:
+        case AUTHENTICATED_USER:
             return {
                 ...state,
                 isAuthenticated: true,
                 token: action.token,
                 numberOfLogins: state.numberOfLogins + 1
             };
-        case unauthenticated:
+        case UNAUTHENTICATED_USER:
             return {
                 ...state,
                 isAuthenticated: false,
                 error: action.error,
                 numberOfLogins: state.numberOfLogins + 1
             };
-        case authenticationError:
+        case AUTHENTICATION_ERROR:
             return {
                 ...state,
                 isAuthenticated: false,
