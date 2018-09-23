@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux';
 import './LogIn.css';
 import { actionCreators } from '../store/LogIn';
 import { Redirect } from 'react-router-dom';
-import { auth } from '../App';
 
 class LogIn extends Component {
     state = {
@@ -47,16 +46,14 @@ class LogIn extends Component {
             return this.setState({ error: 'Введите пароль' });
         }
 
-        console.log(this.state.credentials);
+        //console.log(this.state.credentials);
         this.props.requestLogIn(this.state.credentials);
     }
 
     render() {        
         const { credentials, isAuthenticated } = this.state;
 
-        console.log(isAuthenticated);
-
-        auth.isAuthenticated = this.props.isAuthenticated;
+        //console.log(isAuthenticated);
 
         if (isAuthenticated) {
             const { from } = this.props.location.state || {

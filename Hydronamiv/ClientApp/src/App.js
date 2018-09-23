@@ -5,14 +5,11 @@ import Layout from './components/Layout';
 import Home from './components/Home';
 import Block from './components/Block';
 import LogIn from './components/LogIn';
+import { connect } from 'react-redux';
 
-export const auth = {
-    isAuthenticated: false
-}
-
-const PrivateRoute = ({ component: Component, ...rest }) => (
-    <Route {...rest} render={(props) =>
-        auth.isAuthenticated
+const PrivateRoute = ({ component: Component, ...rest, isAuthenticated }) => (
+    <Route {...rest} render={props =>
+        isAuthenticated
             ? <Component {...props} />
             : <Redirect to={{
                 pathname: '/login',
@@ -21,21 +18,23 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     } />    
 )
 
-class App extends Component {
-    render() {
-        return (
-            <Layout>
-                <Route exact path='/' component={Home} />
-                <PrivateRoute path='/block1' component={Block} />
-                <PrivateRoute path='/block2' component={Block} />
-                <PrivateRoute path='/block3' component={Block} />
-                <PrivateRoute path='/block4' component={Block} />
-                <PrivateRoute path='/block5' component={Block} />
-                <PrivateRoute path='/block7' component={Block} />
-                <Route path='/login' component={LogIn} />
-            </Layout>
-        )
-    }
-}
+const App = (props) => (
+    <Layout>
+        <Route exact path='/' component={Home} />
+        <PrivateRoute path='/block1' component={Block} isAuthenticated={props.isAuthenticated} />
+        <PrivateRoute path='/block2' component={Block} isAuthenticated={props.isAuthenticated} />
+        <PrivateRoute path='/block3' component={Block} isAuthenticated={props.isAuthenticated} />
+        <PrivateRoute path='/block4' component={Block} isAuthenticated={props.isAuthenticated} />
+        <PrivateRoute path='/block5' component={Block} isAuthenticated={props.isAuthenticated} />
+        <PrivateRoute path='/block7' component={Block} isAuthenticated={props.isAuthenticated} />
+        <Route path='/login' component={LogIn} />
+    </Layout>
+)
 
-export default App;
+const mapStateToProps = state => ({
+    isAuthenticated: state.logIn.isAuthenticated
+});
+
+export default connect(mapStateToProps, null, null, {
+    pure: false,
+})(App);
