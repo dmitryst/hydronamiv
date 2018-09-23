@@ -28,7 +28,7 @@ import { Carousel } from 'react-responsive-carousel';
 class MyCarousel extends Component {
     render() {
         return (
-            <Carousel autoPlay="true" interval="4500">
+            <Carousel autoPlay={true} interval={4500}>
                 <div>
                     <img src="imgCarousel/0.png" />
                 </div>
@@ -119,7 +119,7 @@ class Home extends Component {
                     <li className="font-bold">Основные расчетные показатели</li>В данном разделе приводится таблица с сводными результатами расчета по всем модулям.
                 </ol>
                 <br /> <br />
-                <a class="btn btn-success" role="button" href="./Программа Гидронамыв 1.0. Руководство пользователя.pdf" download="Программа Гидронамыв 1.0. Руководство пользователя.pdf">
+                <a className="btn btn-success" role="button" href="./Программа Гидронамыв 1.0. Руководство пользователя.pdf" download="Программа Гидронамыв 1.0. Руководство пользователя.pdf">
                     <span className="glyphicon glyphicon-download-alt" aria-hidden="true"></span><strong> Скачать руководство пользователя</strong>
                 </a>
                 <br /> <br />
